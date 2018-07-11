@@ -9,6 +9,7 @@
 import UIKit
 import TTTAttributedLabel
 import Anchorage
+import DTCoreText
 
 public class TextStackEstimator: NSObject {
     let TABLE_START_TAG = "<table>"
@@ -130,10 +131,9 @@ public class TextStackEstimator: NSObject {
     
     public func createAttributedChunk(baseHTML: String) -> NSAttributedString {
         do {
-            let baseAttributedString = try NSMutableAttributedString(data: baseHTML.data(using: .unicode)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
             let font = FontGenerator.fontOfSize(size: fontSize, submission: submission)
-            let constructedString = baseAttributedString.reconstruct(with: font, color: ColorUtil.fontColor, linkColor: color)
-            return LinkParser.parse(constructedString, color)
+            let baseAttributedString = DTHTMLAttributedStringBuilder.init(html: baseHTML.data(using: .unicode)!, options: [DTUseiOS6Attributes: true, DTDefaultFontFamily: font.familyName, DTDefaultFontName: font.fontName, DTDefaultFontSize: font.pointSize, DTDefaultTextColor: ColorUtil.fontColor, DTDefaultLinkColor: color], documentAttributes: nil).generatedAttributedString()!
+            return LinkParser.parse(baseAttributedString.reconstruct(with: font, color: ColorUtil.fontColor, linkColor: color, codeBackgroundColor: .gray), color)
         } catch {
             return NSMutableAttributedString.init(string: baseHTML)
         }

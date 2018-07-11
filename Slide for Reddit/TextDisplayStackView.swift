@@ -242,15 +242,14 @@ public class TextDisplayStackView: UIStackView {
     
     public func createAttributedChunk(baseHTML: String) -> NSAttributedString {
         do {
-            let baseAttributedString = try NSMutableAttributedString(data: baseHTML.data(using: .unicode)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
             let font = FontGenerator.fontOfSize(size: fontSize, submission: submission)
-            let constructedString = baseAttributedString.reconstruct(with: font, color: ColorUtil.fontColor, linkColor: tColor)
-            return LinkParser.parse(constructedString, tColor)
+            let baseAttributedString = DTHTMLAttributedStringBuilder.init(html: baseHTML.data(using: .unicode)!, options: [DTUseiOS6Attributes: true, DTDefaultFontFamily: font.familyName, DTDefaultFontName: font.fontName, DTDefaultFontSize: font.pointSize, DTDefaultTextColor: ColorUtil.fontColor, DTDefaultLinkColor: tColor], documentAttributes: nil).generatedAttributedString()!
+            return LinkParser.parse(baseAttributedString.reconstruct(with: font, color: ColorUtil.fontColor, linkColor: tColor, codeBackgroundColor: .gray), tColor)
         } catch {
             return NSMutableAttributedString.init(string: baseHTML)
         }
     }
-    
+
     public func getBlocks(_ html: String) -> [String] {
 
         var codeBlockSeperated = parseCodeTags(html)

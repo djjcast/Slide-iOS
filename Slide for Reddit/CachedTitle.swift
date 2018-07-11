@@ -8,6 +8,7 @@
 
 import Foundation
 import TTTAttributedLabel
+import DTCoreText
 
 class CachedTitle {
     static var titles: [String: NSAttributedString] = [:]
@@ -209,9 +210,8 @@ class CachedTitle {
             var length = submission.htmlBody.indexOf("\n") ?? submission.htmlBody.length
             var text = submission.htmlBody.substring(0, length: length)
             do {
-                let attr = try NSMutableAttributedString(data: (text.data(using: .unicode)!), options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
                 let font = FontGenerator.fontOfSize(size: 14, submission: false)
-                let bodyString = attr.reconstruct(with: font, color: colorF, linkColor: ColorUtil.accentColorForSub(sub: submission.subreddit))
+                let bodyString = DTHTMLAttributedStringBuilder.init(html: text.data(using: .unicode)!, options: [DTUseiOS6Attributes: true, DTDefaultFontFamily: font.familyName, DTDefaultFontName: font.fontName, DTDefaultFontSize: font.pointSize, DTDefaultTextColor: ColorUtil.fontColor, DTDefaultLinkColor: ColorUtil.accentColorForSub(sub: submission.subreddit)], documentAttributes: nil).generatedAttributedString()!
                 infoString.append(bodyString)
             } catch {
 

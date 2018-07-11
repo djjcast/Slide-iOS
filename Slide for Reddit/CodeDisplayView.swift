@@ -14,6 +14,7 @@ import TTTAttributedLabel
 import SwiftSpreadsheet
 import Anchorage
 import Then
+import DTCoreText
 
 class CodeDisplayView: UIScrollView {
     
@@ -42,9 +43,8 @@ class CodeDisplayView: UIScrollView {
     func parseText(_ text: String) {
         for string in text.split("\n") {
             do {
-                let attr = try NSMutableAttributedString(data: string.data(using: .unicode)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
-                let font = UIFont(name: "Courier", size:  16 + CGFloat(SettingValues.commentFontOffset)) ?? UIFont.systemFont(ofSize: 16)
-                attr.addAttribute(NSFontAttributeName, value: font, range: NSRange.init(location: 0, length: attr.length))
+                let font = FontGenerator.fontOfSize(size: 16, submission: false)
+                let attr = DTHTMLAttributedStringBuilder.init(html: string.data(using: .unicode)!, options: [DTUseiOS6Attributes: true, DTDefaultFontFamily: font.familyName, DTDefaultFontName: font.fontName, DTDefaultFontSize: font.pointSize, DTDefaultTextColor: ColorUtil.fontColor, DTDefaultLinkColor: UIColor.blue], documentAttributes: nil).generatedAttributedString()!
                 var cell = LinkParser.parse(attr, baseColor)
                 baseData.append(cell)
             } catch {

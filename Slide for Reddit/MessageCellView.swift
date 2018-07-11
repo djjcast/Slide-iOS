@@ -12,6 +12,7 @@ import reddift
 import TTTAttributedLabel
 import AudioToolbox
 import XLActionController
+import DTCoreText
 
 class MessageCellView: UICollectionViewCell, UIGestureRecognizerDelegate, TTTAttributedLabelDelegate {
 
@@ -139,10 +140,10 @@ class MessageCellView: UICollectionViewCell, UIGestureRecognizerDelegate, TTTAtt
         let accent = ColorUtil.accentColorForSub(sub: "")
         let html = message.htmlBody
         do {
-            let attr = try NSMutableAttributedString(data: (html.data(using: .unicode)!), options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
             let font = FontGenerator.fontOfSize(size: 16, submission: false)
-            let attr2 = attr.reconstruct(with: font, color: ColorUtil.fontColor, linkColor: accent)
-            content = LinkParser.parse(attr2, ColorUtil.accentColorForSub(sub: ""))
+            let attr2 = DTHTMLAttributedStringBuilder.init(html: html.data(using: .unicode)!, options: [DTUseiOS6Attributes: true, DTDefaultFontFamily: font.familyName, DTDefaultFontName: font.fontName, DTDefaultFontSize: font.pointSize, DTDefaultTextColor: ColorUtil.fontColor, DTDefaultLinkColor: accent], documentAttributes: nil).generatedAttributedString()!
+
+            content = LinkParser.parse(attr2.reconstruct(with: font, color: ColorUtil.fontColor, linkColor: ColorUtil.accentColorForSub(sub: ""), codeBackgroundColor: .gray),  ColorUtil.accentColorForSub(sub: ""))
             textView.setText(content)
             let framesetterB = CTFramesetterCreateWithAttributedString(content!)
             let textSizeB = CTFramesetterSuggestFrameSizeWithConstraints(framesetterB, CFRange(), nil, CGSize.init(width: width - 16 - (message.subject.hasPrefix("re:") ? 22 : 0), height: CGFloat.greatestFiniteMagnitude), nil)

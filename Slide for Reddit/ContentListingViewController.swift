@@ -10,6 +10,7 @@ import UIKit
 import reddift
 import SDWebImage
 import XLActionController
+import DTCoreText
 
 class ContentListingViewController: MediaViewController, UICollectionViewDelegate, WrappingFlowLayoutDelegate, UICollectionViewDataSource, SubmissionMoreDelegate {
     
@@ -414,10 +415,9 @@ class ContentListingViewController: MediaViewController, UICollectionViewDelegat
                     var content: NSMutableAttributedString?
                     if (!html.isEmpty()) {
                         do {
-                            let attr = try NSMutableAttributedString(data: (html.data(using: .unicode)!), options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
                             let font = FontGenerator.fontOfSize(size: 16, submission: false)
-                            let attr2 = attr.reconstruct(with: font, color: ColorUtil.fontColor, linkColor: .white)
-                            content =  LinkParser.parse(attr2, .white)
+                            let attr2 = DTHTMLAttributedStringBuilder.init(html: html.data(using: .unicode)!, options: [DTUseiOS6Attributes: true, DTDefaultFontFamily: font.familyName, DTDefaultFontName: font.fontName, DTDefaultFontSize: font.pointSize, DTDefaultTextColor: ColorUtil.fontColor, DTDefaultLinkColor: color], documentAttributes: nil).generatedAttributedString()!
+                            content =  LinkParser.parse(attr2.reconstruct(with: font, color: ColorUtil.fontColor, linkColor: .white, codeBackgroundColor: .gray), .white)
                         } catch {
                         }
                     }
