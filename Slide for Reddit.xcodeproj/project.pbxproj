@@ -109,6 +109,9 @@
 		BE51BE6520C7386A00DFFD8B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE51BE6420C7386A00DFFD8B /* StoreKit.framework */; };
 		BE5466271FB93F46007ADD22 /* PlaceholderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5466261FB93F46007ADD22 /* PlaceholderViewController.swift */; };
 		BE5E53751E1DAEB7004FE226 /* RedditLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5E53741E1DAEB7004FE226 /* RedditLink.swift */; };
+		BE6BA215210AF0E8007E1A46 /* ActionRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6BA214210AF0E8007E1A46 /* ActionRequestHandler.swift */; };
+		BE6BA21B210AF0E8007E1A46 /* Slide Action.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BE6BA212210AF0E8007E1A46 /* Slide Action.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BE6BA220210AF3B0007E1A46 /* GetURL.js in Resources */ = {isa = PBXBuildFile; fileRef = BE6BA21F210AF3B0007E1A46 /* GetURL.js */; };
 		BE6EA6C31E1C1DCE00E9E709 /* GfyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6EA6C11E1C1DCE00E9E709 /* GfyItem.swift */; };
 		BE6EA6C41E1C1DCE00E9E709 /* GfycatJSONBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6EA6C21E1C1DCE00E9E709 /* GfycatJSONBase.swift */; };
 		BE6EA6CA1E1C1E9400E9E709 /* Files.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6EA6C61E1C1E9400E9E709 /* Files.swift */; };
@@ -198,6 +201,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		BE6BA219210AF0E8007E1A46 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BE8FC9FC1E0C46090063B8EF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BE6BA211210AF0E8007E1A46;
+			remoteInfo = "Slide Action";
+		};
 		BE8FCA191E0C46090063B8EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BE8FC9FC1E0C46090063B8EF /* Project object */;
@@ -221,6 +231,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				BE6BA21B210AF0E8007E1A46 /* Slide Action.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -288,9 +299,6 @@
 		BA9177B1039FF29FE7BFC503 /* Pods-Slide for RedditUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Slide for RedditUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Slide for RedditUITests/Pods-Slide for RedditUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		BE0E8BBF1E26E91E004B56B1 /* BouncyViewControllerAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BouncyViewControllerAnimator.swift; sourceTree = "<group>"; };
 		BE0EF7C31F43C9510058D572 /* Spoilers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spoilers.swift; sourceTree = "<group>"; };
-		BE0EF7CB1F43F9C30058D572 /* ActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewController.swift; sourceTree = "<group>"; };
-		BE0EF7CE1F43F9C30058D572 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
-		BE0EF7D01F43F9C30058D572 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BE1CD01220F43E51007746B6 /* TextDisplayStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayStackView.swift; sourceTree = "<group>"; };
 		BE1CD01420F51C37007746B6 /* RemovalReasons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemovalReasons.swift; sourceTree = "<group>"; };
 		BE1CD01620F586E9007746B6 /* CodeDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeDisplayView.swift; sourceTree = "<group>"; };
@@ -346,6 +354,10 @@
 		BE51BE6420C7386A00DFFD8B /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		BE5466261FB93F46007ADD22 /* PlaceholderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderViewController.swift; sourceTree = "<group>"; };
 		BE5E53741E1DAEB7004FE226 /* RedditLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RedditLink.swift; sourceTree = "<group>"; };
+		BE6BA212210AF0E8007E1A46 /* Slide Action.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Slide Action.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE6BA214210AF0E8007E1A46 /* ActionRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionRequestHandler.swift; sourceTree = "<group>"; };
+		BE6BA218210AF0E8007E1A46 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BE6BA21F210AF3B0007E1A46 /* GetURL.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = GetURL.js; sourceTree = "<group>"; };
 		BE6EA6C11E1C1DCE00E9E709 /* GfyItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GfyItem.swift; sourceTree = "<group>"; };
 		BE6EA6C21E1C1DCE00E9E709 /* GfycatJSONBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GfycatJSONBase.swift; sourceTree = "<group>"; };
 		BE6EA6C61E1C1E9400E9E709 /* Files.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Files.swift; sourceTree = "<group>"; };
@@ -447,6 +459,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		BE6BA20F210AF0E8007E1A46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BE8FCA011E0C46090063B8EF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -543,16 +562,6 @@
 				C29CF7355B69CCB84BE2FD6B /* Pods_Slide_for_RedditUITests.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		BE0EF7CA1F43F9C30058D572 /* Share to Slide */ = {
-			isa = PBXGroup;
-			children = (
-				BE0EF7CB1F43F9C30058D572 /* ActionViewController.swift */,
-				BE0EF7CD1F43F9C30058D572 /* MainInterface.storyboard */,
-				BE0EF7D01F43F9C30058D572 /* Info.plist */,
-			);
-			path = "Share to Slide";
 			sourceTree = "<group>";
 		};
 		BE1DA3991E26D52500EC0A04 /* ContentViewControllers */ = {
@@ -653,6 +662,16 @@
 			name = Album;
 			sourceTree = "<group>";
 		};
+		BE6BA213210AF0E8007E1A46 /* Slide Action */ = {
+			isa = PBXGroup;
+			children = (
+				BE6BA214210AF0E8007E1A46 /* ActionRequestHandler.swift */,
+				BE6BA218210AF0E8007E1A46 /* Info.plist */,
+				BE6BA21F210AF3B0007E1A46 /* GetURL.js */,
+			);
+			path = "Slide Action";
+			sourceTree = "<group>";
+		};
 		BE6EA6C01E1C1DC200E9E709 /* Gfycat */ = {
 			isa = PBXGroup;
 			children = (
@@ -719,10 +738,10 @@
 			isa = PBXGroup;
 			children = (
 				BE77470720367D98006C72E8 /* Credits.plist */,
+				BE6BA213210AF0E8007E1A46 /* Slide Action */,
 				298777278D5F06761FD8FF4B /* Frameworks */,
 				CA62E6258F89232082F52D05 /* Pods */,
 				BE8FCA051E0C46090063B8EF /* Products */,
-				BE0EF7CA1F43F9C30058D572 /* Share to Slide */,
 				BE8FCA061E0C46090063B8EF /* Slide for Reddit */,
 				BE8FCA1B1E0C46090063B8EF /* Slide for RedditTests */,
 				BE8FCA261E0C46090063B8EF /* Slide for RedditUITests */,
@@ -735,6 +754,7 @@
 				BE8FCA041E0C46090063B8EF /* Slide for Reddit.app */,
 				BE8FCA181E0C46090063B8EF /* Slide for RedditTests.xctest */,
 				BE8FCA231E0C46090063B8EF /* Slide for RedditUITests.xctest */,
+				BE6BA212210AF0E8007E1A46 /* Slide Action.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -883,6 +903,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		BE6BA211210AF0E8007E1A46 /* Slide Action */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BE6BA21C210AF0E8007E1A46 /* Build configuration list for PBXNativeTarget "Slide Action" */;
+			buildPhases = (
+				BE6BA20E210AF0E8007E1A46 /* Sources */,
+				BE6BA20F210AF0E8007E1A46 /* Frameworks */,
+				BE6BA210210AF0E8007E1A46 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Slide Action";
+			productName = "Slide Action";
+			productReference = BE6BA212210AF0E8007E1A46 /* Slide Action.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		BE8FCA031E0C46090063B8EF /* Slide for Reddit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BE8FCA2C1E0C46090063B8EF /* Build configuration list for PBXNativeTarget "Slide for Reddit" */;
@@ -901,6 +938,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				BE6BA21A210AF0E8007E1A46 /* PBXTargetDependency */,
 			);
 			name = "Slide for Reddit";
 			productName = "Slide for Reddit";
@@ -955,10 +993,15 @@
 		BE8FC9FC1E0C46090063B8EF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0830;
+				LastSwiftUpdateCheck = 0940;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Haptic Apps";
 				TargetAttributes = {
+					BE6BA211210AF0E8007E1A46 = {
+						CreatedOnToolsVersion = 9.4.1;
+						DevelopmentTeam = FTT89576VQ;
+						ProvisioningStyle = Automatic;
+					};
 					BE8FCA031E0C46090063B8EF = {
 						CreatedOnToolsVersion = 8.2;
 						DevelopmentTeam = FTT89576VQ;
@@ -1009,11 +1052,20 @@
 				BE8FCA031E0C46090063B8EF /* Slide for Reddit */,
 				BE8FCA171E0C46090063B8EF /* Slide for RedditTests */,
 				BE8FCA221E0C46090063B8EF /* Slide for RedditUITests */,
+				BE6BA211210AF0E8007E1A46 /* Slide Action */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		BE6BA210210AF0E8007E1A46 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BE6BA220210AF3B0007E1A46 /* GetURL.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BE8FCA021E0C46090063B8EF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1292,6 +1344,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		BE6BA20E210AF0E8007E1A46 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BE6BA215210AF0E8007E1A46 /* ActionRequestHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BE8FCA001E0C46090063B8EF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1477,6 +1537,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		BE6BA21A210AF0E8007E1A46 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BE6BA211210AF0E8007E1A46 /* Slide Action */;
+			targetProxy = BE6BA219210AF0E8007E1A46 /* PBXContainerItemProxy */;
+		};
 		BE8FCA1A1E0C46090063B8EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = BE8FCA031E0C46090063B8EF /* Slide for Reddit */;
@@ -1490,14 +1555,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		BE0EF7CD1F43F9C30058D572 /* MainInterface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				BE0EF7CE1F43F9C30058D572 /* Base */,
-			);
-			name = MainInterface.storyboard;
-			sourceTree = "<group>";
-		};
 		BE8FCA101E0C46090063B8EF /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1509,6 +1566,68 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		BE6BA21D210AF0E8007E1A46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FTT89576VQ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "Slide Action/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ccrama.me.redditslide.Slide-Action";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BE6BA21E210AF0E8007E1A46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = FTT89576VQ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "Slide Action/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ccrama.me.redditslide.Slide-Action";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		BE8FCA2A1E0C46090063B8EF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1736,6 +1855,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		BE6BA21C210AF0E8007E1A46 /* Build configuration list for PBXNativeTarget "Slide Action" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BE6BA21D210AF0E8007E1A46 /* Debug */,
+				BE6BA21E210AF0E8007E1A46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		BE8FC9FF1E0C46090063B8EF /* Build configuration list for PBXProject "Slide for Reddit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
