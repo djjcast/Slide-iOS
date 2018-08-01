@@ -170,6 +170,7 @@ class MediaViewController: UIViewController, MediaVCDelegate {
                     heroView!.view.hero.modifiers = [.useNoSnapshot, .spring(stiffness: 250, damping: 25)]
                     
                     let controller = ModalMediaViewController(vc: heroView as! ImageMediaViewController)
+                    controller.modalPresentationStyle = .overFullScreen
 
                     controller.hero.isEnabled = true
                         //(controller as! ModalMediaViewController).hero.modalAnimationType = .none
