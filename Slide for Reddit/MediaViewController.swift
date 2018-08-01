@@ -21,7 +21,7 @@ class MediaViewController: UIViewController, MediaVCDelegate {
     var link: RSubmission!
     var commentCallback: (() -> Void)?
 
-    public func setLink(lnk: RSubmission, shownURL: URL?, lq: Bool, saveHistory: Bool, _ heroView: UIView? = nil) { //lq is should load lq and did load lq
+    public func setLink(lnk: RSubmission, shownURL: URL?, lq: Bool, saveHistory: Bool, _ heroView: UIViewController? = nil) { //lq is should load lq and did load lq
         if saveHistory {
             History.addSeen(s: lnk)
         }
@@ -137,7 +137,7 @@ class MediaViewController: UIViewController, MediaVCDelegate {
         controller.parentController!.dismiss(animated: true)
     }
 
-    func doShow(url: URL, lq: URL? = nil, _ heroView: UIView? = nil) {
+    func doShow(url: URL, lq: URL? = nil, _ heroView: UIViewController? = nil) {
         if ContentType.isExternal(url) {
             if #available(iOS 10.0, *) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -162,23 +162,35 @@ class MediaViewController: UIViewController, MediaVCDelegate {
                 let controller = UIAlertController.init(title: "Spoiler", message: url.absoluteString, preferredStyle: .alert)
                 present(controller, animated: true, completion: nil)
             } else {
+                let heroId = "cell\(UUID().uuidString)"
+
                 let controller = getControllerForUrl(baseUrl: url, lq: lq)!
-                if let view = heroView {
-                    controller.hero.isEnabled = true
-                    view.hero.id = "test"
-                    if controller is ModalMediaViewController && (controller as! ModalMediaViewController).embeddedVC is ImageMediaViewController {
-                        ((controller as! ModalMediaViewController).embeddedVC as! ImageMediaViewController).imageView.hero.id = "test"
-                        ((controller as! ModalMediaViewController).embeddedVC as! ImageMediaViewController).imageView.hero.modifiers = [.zPosition(4)]
+                if heroView is EmbeddableMediaViewController && controller is ModalMediaViewController && (controller as! ModalMediaViewController).embeddedVC is ImageMediaViewController {
+                    
+                    heroView!.view.hero.id = heroId
+                    heroView!.view.hero.modifiers = [.useNoSnapshot, .spring(stiffness: 250, damping: 25)]
+
+                    if let embeddedVC = (controller as! ModalMediaViewController).embeddedVC as? ImageMediaViewController {
+                        (controller as! ModalMediaViewController).hero.isEnabled = true
+                        (controller as! ModalMediaViewController).hero.modalAnimationType = .none
+                        
+                        embeddedVC.view.hero.id = heroId
+                        embeddedVC.view.hero.modifiers = [.useNoSnapshot, .spring(stiffness: 250, damping: 25)]
+                        
+                        controller.view.hero.modifiers = [.source(heroID: heroId), .spring(stiffness: 250, damping: 25)]
+                        
+                        present(controller, animated: true, completion: nil)
                     }
-                }
-                if controller is AlbumViewController {
-                    controller.modalPresentationStyle = .overFullScreen
-                    present(controller, animated: true, completion: nil)
-                } else if controller is ModalMediaViewController {
-                    controller.modalPresentationStyle = .overFullScreen
-                    present(controller, animated: true, completion: nil)
                 } else {
-                    VCPresenter.showVC(viewController: controller, popupIfPossible: true, parentNavigationController: navigationController, parentViewController: self)
+                    if controller is AlbumViewController {
+                        controller.modalPresentationStyle = .overFullScreen
+                        present(controller, animated: true, completion: nil)
+                    } else if controller is ModalMediaViewController {
+                        controller.modalPresentationStyle = .overFullScreen
+                        present(controller, animated: true, completion: nil)
+                    } else {
+                        VCPresenter.showVC(viewController: controller, popupIfPossible: true, parentNavigationController: navigationController, parentViewController: self)
+                    }
                 }
             }
         }

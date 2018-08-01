@@ -65,6 +65,8 @@ class LinkCellView: UICollectionViewCell, UIViewControllerPreviewingDelegate, TT
     }
 
     var bannerImage: UIImageView!
+    var embeddedVC: EmbeddableMediaViewController?
+    
     var thumbImageContainer: UIView!
     var thumbImage: UIImageView!
     var title: TTTAttributedLabel!
@@ -668,6 +670,11 @@ class LinkCellView: UICollectionViewCell, UIViewControllerPreviewingDelegate, TT
 
     private func setLink(submission: RSubmission, parent: UIViewController & MediaVCDelegate, nav: UIViewController?, baseSub: String, test: Bool = false) {
         loadedImage = nil
+        if let embed = embeddedVC {
+            embed.removeFromParentViewController()
+            embed.view.removeFromSuperview()
+            embeddedVC = nil
+        }
         full = parent is CommentViewController
         lq = false
         if true || full { //todo logic for this
@@ -892,16 +899,39 @@ class LinkCellView: UICollectionViewCell, UIViewControllerPreviewingDelegate, TT
             } else {
                 loadedImage = URL.init(string: submission.bannerUrl)
                 let bannerURL = submission.bannerUrl
-                DispatchQueue.global(qos: .userInteractive).async {
-                    self.bannerImage.sd_setImage(with: URL.init(string: bannerURL), completed: { (_, _, cache, _) in
-                        if cache == .none {
-                            UIView.animate(withDuration: 0.3, animations: {
+                
+                if ContentType.isImage(uri: submission.url!) || ContentType.isGifLoadInstantly(uri: submission.url!) {
+                    let embed = ModalMediaViewController.getVCForContent(ofType: type, withModel: EmbeddableMediaDataModel(baseURL: submission.url!, lqURL: nil, text: nil, inAlbum: false))
+                    if embed != nil {
+                        self.embeddedVC = embed
+                        
+                        let tap3 = UITapGestureRecognizer(target: self, action: #selector(LinkCellView.openLink(sender:)))
+                        tap3.delegate = self
+                        embed!.view.addGestureRecognizer(tap3)
+
+                        parent.addChildViewController(embed!)
+                        embed!.didMove(toParentViewController: parent)
+                        self.contentView.addSubview(embed!.view)
+                        embed!.view.horizontalAnchors == bannerImage.horizontalAnchors
+                        embed!.view.topAnchor == bannerImage.safeTopAnchor
+                        embed!.view.bottomAnchor == bannerImage.bottomAnchor
+                        embed!.isView = true
+                    } else {
+                        //Shouldn't be here
+                    }
+
+                } else {
+                    DispatchQueue.global(qos: .userInteractive).async {
+                        self.bannerImage.sd_setImage(with: URL.init(string: bannerURL), completed: { (_, _, cache, _) in
+                            if cache == .none {
+                                UIView.animate(withDuration: 0.3, animations: {
+                                    self.bannerImage.alpha = 1
+                                })
+                            } else {
                                 self.bannerImage.alpha = 1
-                            })
-                        } else {
-                            self.bannerImage.alpha = 1
-                        }
-                    })
+                            }
+                        })
+                    }
                 }
             }
         } else {
@@ -1446,7 +1476,7 @@ class LinkCellView: UICollectionViewCell, UIViewControllerPreviewingDelegate, TT
 
     func openLink(sender: UITapGestureRecognizer? = nil) {
         if let link = link {
-            (parentViewController)?.setLink(lnk: link, shownURL: loadedImage, lq: lq, saveHistory: true, big ? bannerImage : thumbImage) //todo check this
+            (parentViewController)?.setLink(lnk: link, shownURL: loadedImage, lq: lq, saveHistory: true, big ? embeddedVC : nil) //todo check this
         }
     }
 

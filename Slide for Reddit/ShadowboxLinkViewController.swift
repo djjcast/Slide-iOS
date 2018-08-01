@@ -319,7 +319,7 @@ class ShadowboxLinkViewController: MediaViewController, UIScrollViewDelegate, UI
                 embed!.view.horizontalAnchors == topBody.horizontalAnchors
                 embed!.view.topAnchor == topBody.safeTopAnchor
                 embed!.view.bottomAnchor == topBody.bottomAnchor
-                embed!.bottomButtons.isHidden = true
+                embed!.isView = true
             } else {
                 //Shouldn't be here
             }

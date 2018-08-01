@@ -25,6 +25,23 @@ class EmbeddableMediaViewController: UIViewController {
     var progressView: VerticalAlignedLabel = VerticalAlignedLabel()
     var bottomButtons = UIStackView()
     var navigationBar = UINavigationBar()
+    
+    var isView: Bool = false {
+        didSet {
+            if isView {
+                bottomButtons.isHidden = true
+                navigationBar.isHidden = true
+            } else {
+                bottomButtons.isHidden = false
+                navigationBar.isHidden = false
+            }
+            viewSet()
+        }
+    }
+    
+    func viewSet(){
+        
+    }
 
     var commentCallback: (() -> Void)?
 

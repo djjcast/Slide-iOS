@@ -125,28 +125,38 @@ class ImageMediaViewController: EmbeddableMediaViewController {
     }
     
     func fullscreen(_ sender: AnyObject) {
-        if (parent as! ModalMediaViewController).fullscreen {
-            (parent as! ModalMediaViewController).unFullscreen(self)
-        } else {
-            (parent as! ModalMediaViewController).fullscreen(self)
+        if !isView {
+            if (parent as! ModalMediaViewController).fullscreen {
+                (parent as! ModalMediaViewController).unFullscreen(self)
+            } else {
+                (parent as! ModalMediaViewController).fullscreen(self)
+            }
         }
+    }
+    
+    override func viewSet() {
+        connectActions()
     }
 
     func connectActions() {
-        let dtap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTapScrollView(recognizer:)))
-        dtap.numberOfTapsRequired = 2
-        scrollView.addGestureRecognizer(dtap)
-        if parent is ModalMediaViewController {
-            let tap = UITapGestureRecognizer(target: self, action: #selector(fullscreen(_:)))
-            tap.require(toFail: dtap)
-            view.addGestureRecognizer(tap)
-        }
+        if !isView {
+            let dtap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTapScrollView(recognizer:)))
+            dtap.numberOfTapsRequired = 2
+            scrollView.addGestureRecognizer(dtap)
+            
+            if parent is ModalMediaViewController {
+                let tap = UITapGestureRecognizer(target: self, action: #selector(fullscreen(_:)))
+                tap.require(toFail: dtap)
+                view.addGestureRecognizer(tap)
+            }
+            
+            menuButton.addTarget(self, action: #selector(showContextMenu(_:)), for: .touchUpInside)
+            downloadButton.addTarget(self, action: #selector(downloadImageToLibrary(_:)), for: .touchUpInside)
+            goToCommentsButton.addTarget(self, action: #selector(openComments(_:)), for: .touchUpInside)
+            viewInHDButton.addTarget(self, action: #selector(viewInHD(_:)), for: .touchUpInside)
+            showTitleButton.addTarget(self, action: #selector(showTitle(_:)), for: .touchUpInside)
 
-        menuButton.addTarget(self, action: #selector(showContextMenu(_:)), for: .touchUpInside)
-        downloadButton.addTarget(self, action: #selector(downloadImageToLibrary(_:)), for: .touchUpInside)
-        goToCommentsButton.addTarget(self, action: #selector(openComments(_:)), for: .touchUpInside)
-        viewInHDButton.addTarget(self, action: #selector(viewInHD(_:)), for: .touchUpInside)
-        showTitleButton.addTarget(self, action: #selector(showTitle(_:)), for: .touchUpInside)
+        }
     }
 
     func loadContent() {

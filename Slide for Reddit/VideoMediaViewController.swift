@@ -305,7 +305,7 @@ class VideoMediaViewController: EmbeddableMediaViewController {
     
     func handleHideUI() {
         if !self.scrubber.isHidden {
-            if parent is ModalMediaViewController {
+            if parent is ModalMediaViewController && !isView {
                 (parent as! ModalMediaViewController).fullscreen(self)
             }
 
@@ -320,7 +320,7 @@ class VideoMediaViewController: EmbeddableMediaViewController {
     func handleShowUI() {
         timer?.invalidate()
         if self.scrubber.isHidden {
-            if parent is ModalMediaViewController {
+            if parent is ModalMediaViewController && !isView {
                 (parent as! ModalMediaViewController).unFullscreen(self)
             }
             self.scrubber.isHidden = false

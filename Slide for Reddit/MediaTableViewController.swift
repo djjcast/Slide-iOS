@@ -20,7 +20,7 @@ class MediaTableViewController: UITableViewController, MediaVCDelegate, UIViewCo
     var link: RSubmission!
     var commentCallback: (() -> Void)?
 
-    public func setLink(lnk: RSubmission, shownURL: URL?, lq: Bool, saveHistory: Bool, _ heroView: UIView? = nil) { //lq is should load lq and did load lq
+    public func setLink(lnk: RSubmission, shownURL: URL?, lq: Bool, saveHistory: Bool, _ heroView: UIViewController? = nil) { //lq is should load lq and did load lq
         if saveHistory {
             History.addSeen(s: lnk)
         }
@@ -134,7 +134,7 @@ class MediaTableViewController: UITableViewController, MediaVCDelegate, UIViewCo
         controller.parentController!.dismiss(animated: true)
     }
 
-    func doShow(url: URL, lq: URL? = nil, _ heroView: UIView? = nil) {
+    func doShow(url: URL, lq: URL? = nil, _ heroView: UIViewController? = nil) {
         if ContentType.isExternal(url) {
             if #available(iOS 10.0, *) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
