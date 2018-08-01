@@ -19,6 +19,7 @@ target 'Slide for Reddit' do
   pod 'MKColorPicker'
   pod 'BadgeSwift', '~> 5.0'
   pod 'LicensesViewController', '~> 0.6.5'
+  pod 'Hero'
   pod 'BiometricAuthentication'
   pod 'Embassy', '~> 4.0'
   pod 'MTColorDistance'

@@ -8,19 +8,28 @@
 
 import Anchorage
 import Then
+import Hero
 import UIKit
 
-class ModalMediaViewController: UIViewController {
+class ModalMediaViewController: ColorMuxPagingViewController {
 
 //    var loadedURL: URL?
 
     var embeddedVC: EmbeddableMediaViewController!
     var fullscreen = false
+    var panGestureRecognizer: UIPanGestureRecognizer?
+    private let blurEffect = (NSClassFromString("_UICustomBlurEffect") as! UIBlurEffect.Type).init()
 
     private var savedColor: UIColor?
+    public var background: UIView?
+    
+    var originalPosition: CGPoint?
+    var currentPositionTouched: CGPoint?
+    
+    var didStartPan : (_ panStart: Bool) -> Void = { result in }
 
     init(model: EmbeddableMediaDataModel) {
-        super.init(nibName: nil, bundle: nil)
+        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         
         let contentType = ContentType.getContentType(baseUrl: model.baseURL)
         embeddedVC = ModalMediaViewController.getVCForContent(ofType: contentType, withModel: model)
@@ -39,10 +48,58 @@ class ModalMediaViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
+        panGestureRecognizer!.delegate = self
+        panGestureRecognizer!.direction = .vertical
+        panGestureRecognizer!.cancelsTouchesInView = false
+        
+        view.addGestureRecognizer(panGestureRecognizer!)
+        
+        background = UIView()
+        background!.frame = self.view.frame
+        background!.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        background!.backgroundColor = .black
+        
+            background!.alpha = 0.6
+        
+        self.view.insertSubview(background!, at: 0)
+        let blurView = UIVisualEffectView(frame: UIScreen.main.bounds)
+        blurEffect.setValue(3, forKeyPath: "blurRadius")
+        blurView.effect = blurEffect
+        view.insertSubview(blurView, at: 0)
+
 
         configureViews()
         configureLayout()
         connectGestures()
+    }
+    
+    func panGestureAction(_ panGesture: UIPanGestureRecognizer) {
+        let translation = panGesture.translation(in: view)
+        
+        if panGesture.state == .began {
+            originalPosition = view.center
+            currentPositionTouched = panGesture.location(in: view)
+            didStartPan(true)
+            hero.dismissViewController()
+        } else if panGesture.state == .changed {
+            let progress = translation.y / (self.view.frame.size.height / 2)
+            Hero.shared.update(progress)
+            Hero.shared.apply(modifiers: [.fade], to: view)
+
+        } else if panGesture.state == .ended {
+            let velocity = panGesture.velocity(in: view)
+            
+            let down = panGesture.velocity(in: view).y > 0
+            if abs(velocity.y) >= 1000 || abs(self.view.frame.origin.y) > self.view.frame.size.height / 2 {
+                
+                Hero.shared.finish()
+
+            } else {
+                Hero.shared.cancel()
+            }
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -168,4 +225,16 @@ extension ModalMediaViewController {
         })
     }
     
+}
+extension ModalMediaViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        
+        // Reject the touch if it lands in a UIControl.
+        if let view = touch.view {
+            return !view.hasParentOfClass(UIControl.self)
+        } else {
+            return true
+        }
+        
+    }
 }

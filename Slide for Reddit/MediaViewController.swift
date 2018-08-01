@@ -12,6 +12,7 @@ import reddift
 import SafariServices
 import SDWebImage
 import UIKit
+import Hero
 
 class MediaViewController: UIViewController, MediaVCDelegate {
 
@@ -20,7 +21,7 @@ class MediaViewController: UIViewController, MediaVCDelegate {
     var link: RSubmission!
     var commentCallback: (() -> Void)?
 
-    public func setLink(lnk: RSubmission, shownURL: URL?, lq: Bool, saveHistory: Bool) { //lq is should load lq and did load lq
+    public func setLink(lnk: RSubmission, shownURL: URL?, lq: Bool, saveHistory: Bool, _ heroView: UIView? = nil) { //lq is should load lq and did load lq
         if saveHistory {
             History.addSeen(s: lnk)
         }
@@ -44,17 +45,17 @@ class MediaViewController: UIViewController, MediaVCDelegate {
         } else {
             if ContentType.isGif(uri: url) {
                 if !link!.videoPreview.isEmpty() && !ContentType.isGfycat(uri: url) {
-                    doShow(url: URL.init(string: link!.videoPreview)!)
+                    doShow(url: URL.init(string: link!.videoPreview)!, heroView)
                 } else {
-                    doShow(url: url)
+                    doShow(url: url, heroView)
                 }
             } else {
                 if lq && shownURL != nil {
-                    doShow(url: url, lq: shownURL)
+                    doShow(url: url, lq: shownURL, heroView)
                 } else if shownURL != nil && ContentType.imageType(t: type) {
-                    doShow(url: shownURL!)
+                    doShow(url: shownURL!, heroView)
                 } else {
-                    doShow(url: url)
+                    doShow(url: url, heroView)
                 }
             }
         }
@@ -86,7 +87,9 @@ class MediaViewController: UIViewController, MediaVCDelegate {
                 }
                 return WebsiteViewController(url: baseUrl, subreddit: link == nil ? "" : link.subreddit)
             }
-            return SingleContentViewController.init(url: contentUrl!, lq: lq, commentCallback)
+            let media = ModalMediaViewController(model: EmbeddableMediaDataModel(baseURL: baseUrl, lqURL: lq, text: nil, inAlbum: false))
+            media.embeddedVC.commentCallback = commentCallback
+            return media
         } else if type == ContentType.CType.LINK || type == ContentType.CType.NONE {
             if SettingValues.safariVC {
                 let safariVC = SFHideSafariViewController(url: baseUrl)
@@ -134,7 +137,7 @@ class MediaViewController: UIViewController, MediaVCDelegate {
         controller.parentController!.dismiss(animated: true)
     }
 
-    func doShow(url: URL, lq: URL? = nil) {
+    func doShow(url: URL, lq: URL? = nil, _ heroView: UIView? = nil) {
         if ContentType.isExternal(url) {
             if #available(iOS 10.0, *) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -160,10 +163,18 @@ class MediaViewController: UIViewController, MediaVCDelegate {
                 present(controller, animated: true, completion: nil)
             } else {
                 let controller = getControllerForUrl(baseUrl: url, lq: lq)!
+                if let view = heroView {
+                    controller.hero.isEnabled = true
+                    view.hero.id = "test"
+                    if controller is ModalMediaViewController && (controller as! ModalMediaViewController).embeddedVC is ImageMediaViewController {
+                        ((controller as! ModalMediaViewController).embeddedVC as! ImageMediaViewController).imageView.hero.id = "test"
+                        ((controller as! ModalMediaViewController).embeddedVC as! ImageMediaViewController).imageView.hero.modifiers = [.zPosition(4)]
+                    }
+                }
                 if controller is AlbumViewController {
                     controller.modalPresentationStyle = .overFullScreen
                     present(controller, animated: true, completion: nil)
-                } else if controller is SingleContentViewController {
+                } else if controller is ModalMediaViewController {
                     controller.modalPresentationStyle = .overFullScreen
                     present(controller, animated: true, completion: nil)
                 } else {

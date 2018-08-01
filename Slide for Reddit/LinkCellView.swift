@@ -1446,7 +1446,7 @@ class LinkCellView: UICollectionViewCell, UIViewControllerPreviewingDelegate, TT
 
     func openLink(sender: UITapGestureRecognizer? = nil) {
         if let link = link {
-            (parentViewController)?.setLink(lnk: link, shownURL: loadedImage, lq: lq, saveHistory: true) //todo check this
+            (parentViewController)?.setLink(lnk: link, shownURL: loadedImage, lq: lq, saveHistory: true, big ? bannerImage : thumbImage) //todo check this
         }
     }
 
