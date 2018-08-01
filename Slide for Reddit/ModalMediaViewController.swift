@@ -38,6 +38,15 @@ class ModalMediaViewController: ColorMuxPagingViewController {
         }
     }
     
+    init(vc: EmbeddableMediaViewController) {
+        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        
+        self.embeddedVC = vc
+        if embeddedVC == nil {
+            fatalError("embeddedVC should be populated!")
+        }
+    }
+
     override func prefersHomeIndicatorAutoHidden() -> Bool {
         return true
     }

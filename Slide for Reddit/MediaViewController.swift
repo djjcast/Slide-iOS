@@ -163,25 +163,26 @@ class MediaViewController: UIViewController, MediaVCDelegate {
                 present(controller, animated: true, completion: nil)
             } else {
                 let heroId = "cell\(UUID().uuidString)"
-
-                let controller = getControllerForUrl(baseUrl: url, lq: lq)!
-                if heroView is EmbeddableMediaViewController && controller is ModalMediaViewController && (controller as! ModalMediaViewController).embeddedVC is ImageMediaViewController {
+                
+                if heroView is ImageMediaViewController {
                     
                     heroView!.view.hero.id = heroId
                     heroView!.view.hero.modifiers = [.useNoSnapshot, .spring(stiffness: 250, damping: 25)]
+                    
+                    let controller = ModalMediaViewController(vc: heroView as! ImageMediaViewController)
 
-                    if let embeddedVC = (controller as! ModalMediaViewController).embeddedVC as? ImageMediaViewController {
-                        (controller as! ModalMediaViewController).hero.isEnabled = true
-                        (controller as! ModalMediaViewController).hero.modalAnimationType = .none
+                    controller.hero.isEnabled = true
+                        //(controller as! ModalMediaViewController).hero.modalAnimationType = .none
                         
-                        embeddedVC.view.hero.id = heroId
-                        embeddedVC.view.hero.modifiers = [.useNoSnapshot, .spring(stiffness: 250, damping: 25)]
+                        (heroView as! ImageMediaViewController).isView = false
+                        (heroView as! ImageMediaViewController).view.hero.modifiers = [.useNoSnapshot, .spring(stiffness: 250, damping: 25)]
                         
-                        controller.view.hero.modifiers = [.source(heroID: heroId), .spring(stiffness: 250, damping: 25)]
+                       // controller.view.hero.modifiers = [.source(heroID: heroId), .spring(stiffness: 250, damping: 25)]
                         
                         present(controller, animated: true, completion: nil)
-                    }
                 } else {
+                    let controller = getControllerForUrl(baseUrl: url, lq: lq)!
+
                     if controller is AlbumViewController {
                         controller.modalPresentationStyle = .overFullScreen
                         present(controller, animated: true, completion: nil)
