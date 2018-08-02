@@ -164,23 +164,23 @@ class MediaViewController: UIViewController, MediaVCDelegate {
             } else {
                 let heroId = "cell\(UUID().uuidString)"
                 
-                if heroView is ImageMediaViewController {
+                if heroView is ImageMediaViewController, let parentVC = heroView!.view.superview {
+                    let hero = ImageMediaViewController(model: (heroView as! ImageMediaViewController).data, type: (heroView as! ImageMediaViewController).contentType)
+                    (heroView as! ImageMediaViewController).imageView.hero.id = heroId
+                    (heroView as! ImageMediaViewController).imageView.hero.modifiers = [.spring(stiffness: 250, damping: 25)]
                     
-                    heroView!.view.hero.id = heroId
-                    heroView!.view.hero.modifiers = [.useNoSnapshot, .spring(stiffness: 250, damping: 25)]
-                    
-                    let controller = ModalMediaViewController(vc: heroView as! ImageMediaViewController)
+                    let controller = ModalMediaViewController(vc: hero)
                     controller.modalPresentationStyle = .overFullScreen
-
                     controller.hero.isEnabled = true
-                        //(controller as! ModalMediaViewController).hero.modalAnimationType = .none
-                        
-                        (heroView as! ImageMediaViewController).isView = false
-                        (heroView as! ImageMediaViewController).view.hero.modifiers = [.useNoSnapshot, .spring(stiffness: 250, damping: 25)]
-                        
-                       // controller.view.hero.modifiers = [.source(heroID: heroId), .spring(stiffness: 250, damping: 25)]
-                        
-                        present(controller, animated: true, completion: nil)
+                    controller.hero.modalAnimationType = .none
+                    //(controller as! ModalMediaViewController).hero.modalAnimationType = .none
+                    
+                    hero.imageView.hero.id = heroId
+                    hero.imageView.hero.modifiers = [.spring(stiffness: 250, damping: 25)]
+                    
+                    controller.view.hero.modifiers = [.source(heroID: heroId), .spring(stiffness: 250, damping: 25)]
+                   
+                    present(controller, animated: true, completion: nil)
                 } else {
                     let controller = getControllerForUrl(baseUrl: url, lq: lq)!
 

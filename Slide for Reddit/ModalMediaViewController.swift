@@ -78,7 +78,6 @@ class ModalMediaViewController: ColorMuxPagingViewController {
         blurView.effect = blurEffect
         view.insertSubview(blurView, at: 0)
 
-
         configureViews()
         configureLayout()
         connectGestures()

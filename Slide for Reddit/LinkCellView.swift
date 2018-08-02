@@ -900,7 +900,7 @@ class LinkCellView: UICollectionViewCell, UIViewControllerPreviewingDelegate, TT
                 loadedImage = URL.init(string: submission.bannerUrl)
                 let bannerURL = submission.bannerUrl
                 
-                if ContentType.isImage(uri: submission.url!) || ContentType.isGifLoadInstantly(uri: submission.url!) {
+                if ContentType.isImage(uri: submission.url!) {
                     let embed = ModalMediaViewController.getVCForContent(ofType: type, withModel: EmbeddableMediaDataModel(baseURL: submission.url!, lqURL: nil, text: nil, inAlbum: false))
                     if embed != nil {
                         self.embeddedVC = embed
