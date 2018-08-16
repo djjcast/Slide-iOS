@@ -35,6 +35,22 @@ class ImageMediaViewController: EmbeddableMediaViewController {
         loadContent()
     }
 
+    var shouldReloadContent = false
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.imageView.image = nil
+        shouldReloadContent = true
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if shouldReloadContent {
+            loadContent()
+            shouldReloadContent = false
+        }
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateConstraintsForSize(view.bounds.size)
