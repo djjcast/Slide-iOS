@@ -15,11 +15,6 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
     var urlStringKeys = [String]()
     var embeddableMediaDataCache = [String: EmbeddableMediaDataModel]()
     var reusableModalMediaViewControllers = [ModalMediaViewController]()
-    // NOTE: it seems like you should only need three reusable ModalMediaViewControllers (for current, previous, and next image) but
-    //       swiping fast between images (especially after using the overview to switch to an image) causes them to be corrupted/overridden
-    //       - use ten reusable ModalMediaViewControllers for now until the above issue is resolved since using more effectively masks the issue
-    //let numReusableModalMediaViewControllers = 3
-    let numReusableModalMediaViewControllers = 10
     var baseURL: URL?
     var bottomScroll = UIScrollView()
     var failureCallback: ((_ url: URL) -> Void)?
@@ -55,11 +50,11 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
         let prefetcher = SDWebImagePrefetcher.shared()
         prefetcher?.prefetchURLs(thumbs)
 
-        for _ in 0..<numReusableModalMediaViewControllers {
-            reusableModalMediaViewControllers.append(ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[0]]!))
+        for i in 0..<urlStringKeys.count {
+            reusableModalMediaViewControllers.append(ModalMediaViewController(model: embeddableMediaDataCache[urlStringKeys[i]]!))
         }
         
-        self.setViewControllers([reusableModalMediaViewControllers.last!],
+        self.setViewControllers([reusableModalMediaViewControllers.first!],
                                 direction: .forward,
                                 animated: true,
                                 completion: nil)
@@ -117,11 +112,9 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
                     text: nil,
                     inAlbum: false
                 )
-                for _ in 0..<self.numReusableModalMediaViewControllers {
-                    self.reusableModalMediaViewControllers.append(ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[0]]!))
-                }
+                self.reusableModalMediaViewControllers.append(ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[0]]!))
                 
-                self.setViewControllers([self.reusableModalMediaViewControllers.last!],
+                self.setViewControllers([self.reusableModalMediaViewControllers.first!],
                                         direction: .forward,
                                         animated: true,
                                         completion: nil)
@@ -146,11 +139,11 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
                             inAlbum: true
                         )
                     }
-                    for _ in 0..<self.numReusableModalMediaViewControllers {
-                        self.reusableModalMediaViewControllers.append(ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[0]]!))
+                    for i in 0..<self.urlStringKeys.count {
+                        self.reusableModalMediaViewControllers.append(ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[i]]!))
                     }
                     
-                    self.setViewControllers([self.reusableModalMediaViewControllers.last!],
+                    self.setViewControllers([self.reusableModalMediaViewControllers.first!],
                                             direction: .forward,
                                             animated: true,
                                             completion: nil)
@@ -268,12 +261,25 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
             paging: false,
             images: self.thumbs,
             selection: .single(action: { [unowned self] image in
-                // TODO: fix this - the order is wrong when swiping to the next/previous image after using the overview to switch to an image (when using three reusable ModalMediaViewControllers)
-                let modalMediaViewController = self.reusableModalMediaViewControllers.remove(at: 0)
-                modalMediaViewController.updateModel(model: self.embeddableMediaDataCache[self.urlStringKeys[image!]]!)
-                self.reusableModalMediaViewControllers.append(modalMediaViewController)
+                var imageToShow = image!
+                if self.urlStringKeys.count > 2 {
+                    imageToShow = 1
+                    var imageToUpdate = image!
+                    if image == 0 {
+                        // the first image was selected so cache the first three and show the first cached
+                        imageToShow = 0
+                        imageToUpdate = 1
+                    } else if image == self.urlStringKeys.count - 1 {
+                        // the last image was selected so cache the last three and show the last cached
+                        imageToShow = 2
+                        imageToUpdate = self.urlStringKeys.count - 2
+                    }
+                    for (i, u) in (imageToUpdate - 1 ... imageToUpdate + 1).enumerated() {
+                        self.reusableModalMediaViewControllers[i].updateModel(model: self.embeddableMediaDataCache[self.urlStringKeys[u]]!)
+                    }
+                }
                 
-                self.setViewControllers([self.reusableModalMediaViewControllers.last!],
+                self.setViewControllers([self.reusableModalMediaViewControllers[imageToShow]],
                                         direction: .forward,
                                         animated: true,
                                         completion: nil)
@@ -303,10 +309,17 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
             return nil
         }
 
-        let modalMediaViewController = reusableModalMediaViewControllers.remove(at: 0)
+        for (i, m) in reusableModalMediaViewControllers.enumerated() {
+            if m.embeddedVC.data.baseURL?.absoluteString == urlStringKeys[previousIndex] {
+                let modalMediaViewController = reusableModalMediaViewControllers.remove(at: i)
+                reusableModalMediaViewControllers.insert(modalMediaViewController, at: 0)
+                return reusableModalMediaViewControllers.first
+            }
+        }
+        let modalMediaViewController = reusableModalMediaViewControllers.removeLast()
         modalMediaViewController.updateModel(model: self.embeddableMediaDataCache[self.urlStringKeys[previousIndex]]!)
-        reusableModalMediaViewControllers.append(modalMediaViewController)
-        return reusableModalMediaViewControllers.last
+        reusableModalMediaViewControllers.insert(modalMediaViewController, at: 0)
+        return reusableModalMediaViewControllers.first
     }
     
     func pageViewController(_ pageViewController: UIPageViewController,
@@ -314,7 +327,7 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
         guard let viewControllerIndex = urlStringKeys.index(of: ((viewController as! ModalMediaViewController).embeddedVC.data.baseURL?.absoluteString)!) else {
             return nil
         }
-        
+
         let nextIndex = viewControllerIndex + 1
         let orderedViewControllersCount = urlStringKeys.count
         
@@ -326,6 +339,13 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
             return nil
         }
 
+        for (i, m) in reusableModalMediaViewControllers.enumerated() {
+            if m.embeddedVC.data.baseURL?.absoluteString == urlStringKeys[nextIndex] {
+                let modalMediaViewController = reusableModalMediaViewControllers.remove(at: i)
+                reusableModalMediaViewControllers.append(modalMediaViewController)
+                return reusableModalMediaViewControllers.last
+            }
+        }
         let modalMediaViewController = reusableModalMediaViewControllers.remove(at: 0)
         modalMediaViewController.updateModel(model: self.embeddableMediaDataCache[self.urlStringKeys[nextIndex]]!)
         reusableModalMediaViewControllers.append(modalMediaViewController)
