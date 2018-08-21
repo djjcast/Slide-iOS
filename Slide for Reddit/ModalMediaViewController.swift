@@ -66,6 +66,23 @@ class ModalMediaViewController: UIViewController {
         }
     }
     
+    func updateModel(model: EmbeddableMediaDataModel) {
+        // TODO: handle the case where embeddedVC was instantiated as an ImageMediaViewController and it should now be a VideoMediaViewController
+        //       - cache a single ImageMediaViewController and VideoMediaViewController to be reused when needed
+        embeddedVC.data = model
+        switch ContentType.getContentType(baseUrl: model.baseURL) {
+        case .IMAGE, .IMGUR:
+            // Still image (possibly low quality)
+            (embeddedVC as! ImageMediaViewController).imageView.image = nil
+            (embeddedVC as! ImageMediaViewController).loadContent()
+        case .GIF, .STREAMABLE, .VID_ME, .VIDEO:
+            // Gif / video / youtube video
+            (embeddedVC as! VideoMediaViewController).loadContent()
+        default:
+            fatalError("embeddedVC content type not recognized!")
+        }
+    }
+
     func loadTypeAsync(_ baseUrl: URL, _ type: ContentType.CType) {
         if type == .DEVIANTART {
             let finalURL = URL(string: "http://backend.deviantart.com/oembed?url=" + baseUrl.absoluteString)!

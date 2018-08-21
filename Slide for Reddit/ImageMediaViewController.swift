@@ -35,22 +35,6 @@ class ImageMediaViewController: EmbeddableMediaViewController {
         loadContent()
     }
 
-    var shouldReloadContent = false
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        self.imageView.image = nil
-        shouldReloadContent = true
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if shouldReloadContent {
-            loadContent()
-            shouldReloadContent = false
-        }
-    }
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateConstraintsForSize(view.bounds.size)
@@ -187,6 +171,8 @@ class ImageMediaViewController: EmbeddableMediaViewController {
             if let strongSelf = self {
                 strongSelf.imageView.image = image
                 strongSelf.imageView.sizeToFit()
+                // NOTE: this constraint was temporarily added because some images do not show otherwise (like the 14th image in this album: https://imgur.com/a/t7U4xiV)
+                strongSelf.imageView.horizontalAnchors == strongSelf.scrollView.horizontalAnchors
                 strongSelf.scrollView.contentSize = image.size
                 strongSelf.view.setNeedsLayout()
 

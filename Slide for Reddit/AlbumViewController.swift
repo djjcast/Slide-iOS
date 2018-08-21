@@ -14,6 +14,12 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
     
     var urlStringKeys = [String]()
     var embeddableMediaDataCache = [String: EmbeddableMediaDataModel]()
+    var reusableModalMediaViewControllers = [ModalMediaViewController]()
+    // NOTE: it seems like you should only need three reusable ModalMediaViewControllers (for current, previous, and next image) but
+    //       swiping fast between images (especially after using the overview to switch to an image) causes them to be corrupted/overridden
+    //       - use ten reusable ModalMediaViewControllers for now until the above issue is resolved since using more effectively masks the issue
+    //let numReusableModalMediaViewControllers = 3
+    let numReusableModalMediaViewControllers = 10
     var baseURL: URL?
     var bottomScroll = UIScrollView()
     var failureCallback: ((_ url: URL) -> Void)?
@@ -49,9 +55,11 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
         let prefetcher = SDWebImagePrefetcher.shared()
         prefetcher?.prefetchURLs(thumbs)
 
-        let firstViewController = ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[0]]!)
+        for _ in 0..<numReusableModalMediaViewControllers {
+            reusableModalMediaViewControllers.append(ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[0]]!))
+        }
         
-        self.setViewControllers([firstViewController],
+        self.setViewControllers([reusableModalMediaViewControllers.last!],
                                 direction: .forward,
                                 animated: true,
                                 completion: nil)
@@ -109,9 +117,11 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
                     text: nil,
                     inAlbum: false
                 )
-                let firstViewController = ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[0]]!)
+                for _ in 0..<self.numReusableModalMediaViewControllers {
+                    self.reusableModalMediaViewControllers.append(ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[0]]!))
+                }
                 
-                self.setViewControllers([firstViewController],
+                self.setViewControllers([self.reusableModalMediaViewControllers.last!],
                                         direction: .forward,
                                         animated: true,
                                         completion: nil)
@@ -136,9 +146,11 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
                             inAlbum: true
                         )
                     }
-                    let firstViewController = ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[0]]!)
+                    for _ in 0..<self.numReusableModalMediaViewControllers {
+                        self.reusableModalMediaViewControllers.append(ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[0]]!))
+                    }
                     
-                    self.setViewControllers([firstViewController],
+                    self.setViewControllers([self.reusableModalMediaViewControllers.last!],
                                             direction: .forward,
                                             animated: true,
                                             completion: nil)
@@ -256,9 +268,12 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
             paging: false,
             images: self.thumbs,
             selection: .single(action: { [unowned self] image in
-                let firstViewController = ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[image!]]!)
+                // TODO: fix this - the order is wrong when swiping to the next/previous image after using the overview to switch to an image (when using three reusable ModalMediaViewControllers)
+                let modalMediaViewController = self.reusableModalMediaViewControllers.remove(at: 0)
+                modalMediaViewController.updateModel(model: self.embeddableMediaDataCache[self.urlStringKeys[image!]]!)
+                self.reusableModalMediaViewControllers.append(modalMediaViewController)
                 
-                self.setViewControllers([firstViewController],
+                self.setViewControllers([self.reusableModalMediaViewControllers.last!],
                                         direction: .forward,
                                         animated: true,
                                         completion: nil)
@@ -288,7 +303,10 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
             return nil
         }
 
-        return ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[previousIndex]]!)
+        let modalMediaViewController = reusableModalMediaViewControllers.remove(at: 0)
+        modalMediaViewController.updateModel(model: self.embeddableMediaDataCache[self.urlStringKeys[previousIndex]]!)
+        reusableModalMediaViewControllers.append(modalMediaViewController)
+        return reusableModalMediaViewControllers.last
     }
     
     func pageViewController(_ pageViewController: UIPageViewController,
@@ -308,7 +326,10 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
             return nil
         }
 
-        return ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[nextIndex]]!)
+        let modalMediaViewController = reusableModalMediaViewControllers.remove(at: 0)
+        modalMediaViewController.updateModel(model: self.embeddableMediaDataCache[self.urlStringKeys[nextIndex]]!)
+        reusableModalMediaViewControllers.append(modalMediaViewController)
+        return reusableModalMediaViewControllers.last
     }
     
     func getKeyFromURL(_ url: URL) -> String {
