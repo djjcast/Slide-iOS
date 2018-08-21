@@ -283,6 +283,7 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
                                         direction: .forward,
                                         animated: true,
                                         completion: nil)
+                self.navItem?.title = "\(self.urlStringKeys.index(of: ((self.viewControllers!.first! as! ModalMediaViewController).embeddedVC.data.baseURL?.absoluteString)!)! + 1)/\(self.urlStringKeys.count)"
                 alert.dismiss(animated: true, completion: nil)
             }))
         alert.addAction(title: "Close", style: .cancel)
