@@ -50,7 +50,7 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
         let prefetcher = SDWebImagePrefetcher.shared()
         prefetcher?.prefetchURLs(thumbs)
 
-        for i in 0..<urlStringKeys.count {
+        for i in 0..<min(urlStringKeys.count, 3) {
             reusableModalMediaViewControllers.append(ModalMediaViewController(model: embeddableMediaDataCache[urlStringKeys[i]]!))
         }
         
@@ -139,7 +139,7 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
                             inAlbum: true
                         )
                     }
-                    for i in 0..<self.urlStringKeys.count {
+                    for i in 0..<min(self.urlStringKeys.count, 3) {
                         self.reusableModalMediaViewControllers.append(ModalMediaViewController(model: self.embeddableMediaDataCache[self.urlStringKeys[i]]!))
                     }
                     
@@ -328,7 +328,7 @@ class AlbumViewController: SwipeDownModalVC, UIPageViewControllerDataSource, UIP
         guard let viewControllerIndex = urlStringKeys.index(of: ((viewController as! ModalMediaViewController).embeddedVC.data.baseURL?.absoluteString)!) else {
             return nil
         }
-
+        
         let nextIndex = viewControllerIndex + 1
         let orderedViewControllersCount = urlStringKeys.count
         
